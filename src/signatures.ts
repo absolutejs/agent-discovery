@@ -10,10 +10,13 @@ import type {
 import { validateAgentDocument } from "./validation";
 
 const encode = (value: Uint8Array) => Buffer.from(value).toString("base64url");
-const decode = (value: string) => new Uint8Array(Buffer.from(value, "base64url"));
+const decode = (value: string) =>
+  new Uint8Array(Buffer.from(value, "base64url"));
 
-const signaturePayload = (document: AgentDiscoveryDocument, signature: Omit<DiscoverySignature, "value">) =>
-  canonicalBytes({ document, signature });
+const signaturePayload = (
+  document: AgentDiscoveryDocument,
+  signature: Omit<DiscoverySignature, "value">,
+) => canonicalBytes({ document, signature });
 
 export const signAgentDocument = async (
   document: AgentDiscoveryDocument,
@@ -21,7 +24,8 @@ export const signAgentDocument = async (
   options: { createdAt?: string; expiresAt?: string } = {},
 ): Promise<SignedAgentDiscoveryDocument> => {
   const errors = validateAgentDocument(document);
-  if (errors.length) throw new Error(`Invalid agent discovery document: ${errors.join(", ")}`);
+  if (errors.length)
+    throw new Error(`Invalid agent discovery document: ${errors.join(", ")}`);
   const unsigned: Omit<DiscoverySignature, "value"> = {
     algorithm: signer.algorithm,
     keyId: signer.keyId,
@@ -32,7 +36,10 @@ export const signAgentDocument = async (
   return {
     document,
     signatures: [
-      { ...unsigned, value: encode(await signer.sign(signaturePayload(document, unsigned))) },
+      {
+        ...unsigned,
+        value: encode(await signer.sign(signaturePayload(document, unsigned))),
+      },
     ],
   };
 };
@@ -42,7 +49,10 @@ export const addAgentSignature = async (
   signer: DiscoverySigner,
 ): Promise<SignedAgentDiscoveryDocument> => {
   const next = await signAgentDocument(signed.document, signer);
-  return { document: signed.document, signatures: [...signed.signatures, ...next.signatures] };
+  return {
+    document: signed.document,
+    signatures: [...signed.signatures, ...next.signatures],
+  };
 };
 
 export const verifyAgentDocument = async (
@@ -73,5 +83,9 @@ export const verifyAgentDocument = async (
     else errors.push(`invalid signature for ${signature.keyId}`);
   }
   if (!signed.signatures.length) errors.push("document is unsigned");
-  return { ok: errors.length === 0 && validKeyIds.length > 0, validKeyIds, errors };
+  return {
+    ok: errors.length === 0 && validKeyIds.length > 0,
+    validKeyIds,
+    errors,
+  };
 };

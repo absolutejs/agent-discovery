@@ -11,11 +11,12 @@ const normalize = (value: unknown): unknown => {
   return value;
 };
 
-export const canonicalJson = (value: unknown) => JSON.stringify(normalize(value));
+export const canonicalJson = (value: unknown) =>
+  JSON.stringify(normalize(value));
 export const canonicalBytes = (value: unknown) =>
   new TextEncoder().encode(canonicalJson(value));
 
 export const sha256 = async (value: unknown) =>
-  Buffer.from(await crypto.subtle.digest("SHA-256", canonicalBytes(value))).toString(
-    "base64url",
-  );
+  Buffer.from(
+    await crypto.subtle.digest("SHA-256", canonicalBytes(value)),
+  ).toString("base64url");

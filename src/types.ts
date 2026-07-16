@@ -1,11 +1,15 @@
 export const ABSOLUTE_AGENT_SCHEMA =
+  "https://absolutejs.github.io/agents/schemas/agent-discovery/v1.json" as const;
+export const ABSOLUTE_AGENT_SCHEMA_LEGACY =
   "https://absolutejs.com/schemas/agent-discovery/v1" as const;
 export const ABSOLUTE_AGENT_PATH = "/.well-known/absolute-agent.json" as const;
-export const ABSOLUTE_AGENTS_PATH = "/.well-known/absolute-agents.json" as const;
+export const ABSOLUTE_AGENTS_PATH =
+  "/.well-known/absolute-agents.json" as const;
 export const A2A_AGENT_CARD_PATH = "/.well-known/agent-card.json" as const;
 export const AGENTS_TEXT_PATH = "/agents.txt" as const;
 export const AGENT_SITEMAP_PATH = "/agents-sitemap.xml" as const;
-export const AGENT_REGISTRY_PATH = "/.well-known/absolute-agent-registry.json" as const;
+export const AGENT_REGISTRY_PATH =
+  "/.well-known/absolute-agent-registry.json" as const;
 export const AGENT_SEARCH_PATH = "/v1/agents" as const;
 
 export type AgentEffect =
@@ -31,7 +35,7 @@ export type AgentCapability = {
 };
 
 export type AgentInterface = {
-  type: "a2a" | "mcp" | "http" | "openapi" | "websocket";
+  type: "a2a" | "arazzo" | "mcp" | "http" | "openapi" | "webmcp" | "websocket";
   url: string;
   protocolVersion?: string;
   contentTypes?: readonly string[];
@@ -54,7 +58,7 @@ export type AgentPublisher = {
 };
 
 export type AgentDiscoveryDocument = {
-  $schema: typeof ABSOLUTE_AGENT_SCHEMA;
+  $schema: typeof ABSOLUTE_AGENT_SCHEMA | typeof ABSOLUTE_AGENT_SCHEMA_LEGACY;
   id: string;
   name: string;
   description: string;
@@ -74,7 +78,11 @@ export type AgentDiscoveryDocument = {
   iconUrl?: string;
   documentationUrl?: string;
   paymentProtocols?: readonly string[];
-  examples?: readonly { title: string; prompt: string; capabilityId?: string }[];
+  examples?: readonly {
+    title: string;
+    prompt: string;
+    capabilityId?: string;
+  }[];
   relatedAgents?: readonly string[];
   createdAt: string;
   updatedAt: string;

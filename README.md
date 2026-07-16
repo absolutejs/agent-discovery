@@ -2,6 +2,12 @@
 
 Signed, searchable, provider-neutral discovery for AI agents.
 
+The canonical descriptor schema is live at
+<https://absolutejs.github.io/agents/schemas/agent-discovery/v1.json>. Version
+0.2 also understands Arazzo and WebMCP interfaces. The original
+`absolutejs.com` schema identifier remains verifiable during migration, but new
+documents emitted with `ABSOLUTE_AGENT_SCHEMA` use the live immutable URL.
+
 One descriptor publishes an agent through several interoperable surfaces:
 
 - `/.well-known/absolute-agent.json` — full signed capability descriptor
@@ -19,7 +25,7 @@ the in-memory or PostgreSQL registry without choosing an auth or model provider.
 ```ts
 import {
   createAgentDiscoveryHandler,
-  signAgentDocument
+  signAgentDocument,
 } from "@absolutejs/agent-discovery";
 
 const signed = await signAgentDocument(document, kmsSigner);
